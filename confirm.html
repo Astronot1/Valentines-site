@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>It’s a date!</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body style="background:#12010a; overflow:hidden;">
+    <canvas id="fireworks" style="position:fixed; inset:0; width:100vw; height:100vh;"></canvas>
+
+    <main style="
+    position:relative;
+    z-index:2;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    color:white;
+  ">
+        <div style="
+      width:100%;
+      max-width:980px;
+      background:rgba(25,5,18,.65);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      padding:26px;
+      backdrop-filter: blur(14px);
+      box-shadow:0 30px 90px rgba(0,0,0,.45);
+    ">
+
+            <h1 style="font-size:clamp(38px,4vw,58px); margin:0 0 18px;">
+                its a date💗
+            </h1>
+
+            <!-- TWO-CARD SUMMARY: RESTAURANT + AFTER -->
+            <div id="summaryGrid" style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:18px;
+        align-items:start;
+        text-align:left;
+      ">
+
+                <!-- RESTAURANT -->
+                <div style="
+          background:rgba(255,255,255,.08);
+          border:1px solid rgba(255,255,255,.14);
+          border-radius:20px;
+          padding:16px;
+        ">
+                    <div style="
+            display:inline-block;
+            padding:10px 14px;
+            border-radius:999px;
+            background:#ff4f8d;
+            font-weight:900;
+            margin-bottom:12px;
+          " id="restaurantTitle"> Restaurant</div>
+
+                    <img id="chosenRestaurantImg" alt="chosen restaurant" style="
+            width:100%;
+            height:210px;
+            object-fit:cover;
+            border-radius:16px;
+            border:1px solid rgba(255,255,255,.18);
+            display:block;
+            margin-bottom:12px;
+          ">
+
+                    <div style="font-size:20px; font-weight:900; margin-bottom:10px;" id="chosenRestaurantName">🍽️
+                    </div>
+
+                    <a id="restaurantLink" target="_blank" rel="noopener" style="
+            display:inline-block;
+            font-weight:900;
+            color:#ffd1e3;
+            text-decoration:none;
+            margin-top:2px;
+          ">view menu</a>
+                </div>
+
+                <!-- AFTER -->
+                <div style="
+          background:rgba(255,255,255,.08);
+          border:1px solid rgba(255,255,255,.14);
+          border-radius:20px;
+          padding:16px;
+        ">
+                    <div style="
+            display:inline-block;
+            padding:10px 14px;
+            border-radius:999px;
+            background:#ff4f8d;
+            font-weight:900;
+            margin-bottom:12px;
+          " id="afterTitle"> After</div>
+
+                    <img id="chosenAfterImg" alt="after plan" style="
+            width:100%;
+            height:210px;
+            object-fit:cover;
+            border-radius:16px;
+            border:1px solid rgba(255,255,255,.18);
+            display:block;
+            margin-bottom:12px;
+          ">
+
+                    <div style="font-size:20px; font-weight:900;" id="chosenAfterName">✨</div>
+                </div>
+
+            </div>
+
+            <!-- DATE + TIME -->
+            <div style="
+        margin-top:18px;
+        background:rgba(255,255,255,.08);
+        border:1px solid rgba(255,255,255,.14);
+        border-radius:20px;
+        padding:16px;
+        text-align:center;
+      ">
+                <div style="font-size:20px; font-weight:900; margin-bottom:8px;" id="chosenDate">📅</div>
+                <div style="font-size:20px; font-weight:900;" id="chosenTime">⏰</div>
+                <div style="margin-top:10px; opacity:.85; font-weight:700;">
+                </div>
+            </div>
+
+            <!-- START OVER -->
+            <div style="display:flex; justify-content:center; margin-top:18px;">
+                <a class="btn btn-ghost" href="index.html" style="text-decoration:none;">
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Responsive layout
+        const summaryGrid = document.getElementById("summaryGrid");
+        function responsiveSummary() {
+            if (window.innerWidth < 900) {
+                summaryGrid.style.gridTemplateColumns = "1fr";
+                summaryGrid.style.textAlign = "left";
+            } else {
+                summaryGrid.style.gridTemplateColumns = "1fr 1fr";
+            }
+        }
+        window.addEventListener("resize", responsiveSummary);
+        responsiveSummary();
+
+        // Load choices
+        const restaurantName = localStorage.getItem("restaurantName") || "somewhere cute";
+        const restaurantImg = localStorage.getItem("restaurantImg") ||
+            "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=1200&q=80";
+        const restaurantHref = localStorage.getItem("restaurantHref") || "";
+
+        const afterName = localStorage.getItem("afterName") || "something fun";
+        const afterImg = localStorage.getItem("afterImg") ||
+            "https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=1200&q=80";
+
+        const date = localStorage.getItem("dateChosen") || "(no date chosen)";
+        const time = localStorage.getItem("timeChosen") || "(no time chosen)";
+
+        document.getElementById("chosenRestaurantImg").src = restaurantImg;
+        document.getElementById("chosenRestaurantName").textContent = `🍽️ ${restaurantName}`;
+
+        const linkEl = document.getElementById("restaurantLink");
+        if (restaurantHref) {
+            linkEl.href = restaurantHref;
+        } else {
+            linkEl.style.display = "none";
+        }
+
+        document.getElementById("chosenAfterImg").src = afterImg;
+        document.getElementById("chosenAfterName").textContent = `✨ ${afterName}`;
+
+        document.getElementById("chosenDate").textContent = `📅 ${date}`;
+        document.getElementById("chosenTime").textContent = `⏰ ${time}`;
+
+        // --- Fireworks ---
+        const canvas = document.getElementById("fireworks");
+        const ctx = canvas.getContext("2d");
+
+        function setCanvasSize() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = Math.floor(window.innerWidth * dpr);
+            canvas.height = Math.floor(window.innerHeight * dpr);
+            canvas.style.width = window.innerWidth + "px";
+            canvas.style.height = window.innerHeight + "px";
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener("resize", setCanvasSize);
+        setCanvasSize();
+
+        const particles = [];
+        const gravity = 0.06;
+
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+
+        function burst(x, y) {
+            const count = Math.floor(rand(55, 95));
+            for (let i = 0; i < count; i++) {
+                const a = rand(0, Math.PI * 2);
+                const s = rand(1.2, 4.4);
+                particles.push({
+                    x, y,
+                    vx: Math.cos(a) * s,
+                    vy: Math.sin(a) * s,
+                    life: rand(55, 95),
+                    size: rand(1.1, 2.7),
+                    hue: rand(0, 360),
+                });
+            }
+        }
+
+        function tick() {
+            ctx.fillStyle = "rgba(0,0,0,0.18)";
+            ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.vy += gravity;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 1;
+
+                ctx.beginPath();
+                ctx.fillStyle = `hsla(${p.hue}, 100%, 70%, ${Math.max(p.life / 95, 0)})`;
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            // gentle auto fireworks
+            if (Math.random() < 0.05) {
+                burst(rand(120, window.innerWidth - 120), rand(90, window.innerHeight * 0.55));
+            }
+
+            requestAnimationFrame(tick);
+        }
+
+        // Initial celebration
+        burst(window.innerWidth * 0.50, window.innerHeight * 0.30);
+        burst(window.innerWidth * 0.35, window.innerHeight * 0.42);
+        burst(window.innerWidth * 0.65, window.innerHeight * 0.42);
+
+        // Click fireworks
+        window.addEventListener("pointerdown", (e) => burst(e.clientX, e.clientY));
+
+        tick();
+    </script>
+
+</body>
+
+</html>

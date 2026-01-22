@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pick date & time</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body style="background:#ffd6e6;">
+    <main style="
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+  ">
+        <div style="width:100%; max-width:720px;">
+
+            <h1 style="font-size:clamp(36px,4vw,56px); margin:0 0 26px;">
+                pick a date & time
+            </h1>
+
+            <div id="formGrid" style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:16px;
+        align-items:start;
+      ">
+
+                <!-- DATE DROPDOWN -->
+                <label style="text-align:left; font-weight:800;">
+                    <div style="margin-bottom:8px; font-size:18px;">date</div>
+                    <select id="dateSelect" style="
+            width:100%;
+            padding:16px;
+            border-radius:16px;
+            border:2px solid #ffd1e4;
+            font-size:18px;
+            background:white;
+          ">
+                        <option value="" selected disabled>choose a date…</option>
+                        <!-- Only these dates are allowed -->
+                        <option value="2026-01-15">January 15</option>
+                        <option value="2026-01-16">January 16</option>
+                        <option value="2026-01-17">January 17</option>
+                        <option value="2026-01-18">January 18</option>
+                        <option value="2026-01-19">January 19</option>
+                        <option value="2026-01-20">January 20</option>
+                        <option value="2026-01-21">January 21</option>
+                    </select>
+                </label>
+
+                <!-- TIME DROPDOWN -->
+                <label style="text-align:left; font-weight:800;">
+                    <div style="margin-bottom:8px; font-size:18px;">time</div>
+                    <select id="timeSelect" style="
+            width:100%;
+            padding:16px;
+            border-radius:16px;
+            border:2px solid #ffd1e4;
+            font-size:18px;
+            background:white;
+          ">
+                        <option value="" selected disabled>choose a time…</option>
+
+                        <!-- Friendly date-night times (edit these however you want) -->
+                        <option value="17:30">5:30 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="18:30">6:30 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="19:30">7:30 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                        <option value="20:30">8:30 PM</option>
+                    </select>
+                </label>
+
+            </div>
+
+            <div style="margin-top:26px;">
+                <button class="btn btn-primary" id="finishBtn" disabled>
+                    Done
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- Responsive stacking on small screens ---
+        const grid = document.getElementById("formGrid");
+        function responsiveForm() {
+            if (window.innerWidth < 720) grid.style.gridTemplateColumns = "1fr";
+            else grid.style.gridTemplateColumns = "1fr 1fr";
+        }
+        window.addEventListener("resize", responsiveForm);
+        responsiveForm();
+
+        // --- Elements ---
+        const dateSelect = document.getElementById("dateSelect");
+        const timeSelect = document.getElementById("timeSelect");
+        const finishBtn = document.getElementById("finishBtn");
+
+        // --- Restore saved values (if user goes back/forward) ---
+        const savedDate = localStorage.getItem("dateChosen");
+        const savedTime = localStorage.getItem("timeChosen");
+
+        // Only restore date if it's one of the allowed dropdown values
+        if (savedDate && [...dateSelect.options].some(o => o.value === savedDate)) {
+            dateSelect.value = savedDate;
+        } else {
+            // If something invalid was stored before, clear it
+            localStorage.removeItem("dateChosen");
+        }
+
+        // Restore time if it's one of the allowed values
+        if (savedTime && [...timeSelect.options].some(o => o.value === savedTime)) {
+            timeSelect.value = savedTime;
+        } else {
+            localStorage.removeItem("timeChosen");
+        }
+
+        // --- Enable Finish only when both chosen ---
+        function validate() {
+            const ok = Boolean(dateSelect.value && timeSelect.value);
+            finishBtn.disabled = !ok;
+        }
+
+        // Save on change
+        dateSelect.addEventListener("change", () => {
+            localStorage.setItem("dateChosen", dateSelect.value);
+            validate();
+        });
+
+        timeSelect.addEventListener("change", () => {
+            localStorage.setItem("timeChosen", timeSelect.value);
+            validate();
+        });
+
+        validate();
+
+        // --- Continue to final page ---
+        finishBtn.addEventListener("click", () => {
+            if (finishBtn.disabled) return;
+            localStorage.setItem("dateChosen", dateSelect.value);
+            localStorage.setItem("timeChosen", timeSelect.value);
+            window.location.href = "after.html";
+        });
+    </script>
+</body>
+
+</html>

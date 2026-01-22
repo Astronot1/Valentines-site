@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Valentine?</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body style="background:#ffd6e6;">
+
+    <main style="
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  ">
+
+        <div>
+
+            <h1 style="
+        font-size:clamp(40px,5vw,64px);
+        margin-bottom:18px;
+      ">
+                will you be my valentine?
+            </h1>
+
+            <!-- GIF -->
+            <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2h3aWZtY2ZxcGtyNzd2Z2RpbXNocmhtZmRqamtxc2F1YXR4ZmdyaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif"
+                alt="Kiss gif" style="
+          width:260px;
+          max-width:70vw;
+          margin:0 auto 28px;
+          display:block;
+          border-radius:16px;
+        " />
+
+            <div class="actions">
+                <button class="btn btn-primary" id="yesBtn">
+                    yes i love you
+                </button>
+
+                <button class="btn btn-ghost" id="noBtn">
+                    no i fucking hate your guts and want you to die
+                </button>
+                <script>
+                    const goNext = () => window.location.href = "restaurants.html";
+
+                    document.getElementById("yesBtn").addEventListener("click", () => {
+                        localStorage.setItem("valentineAccepted", "yes");
+                        goNext();
+                    });
+
+                    document.getElementById("noBtn").addEventListener("click", () => {
+                        localStorage.setItem("valentineAccepted", "no");
+                        goNext();
+                    });
+                </script>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
